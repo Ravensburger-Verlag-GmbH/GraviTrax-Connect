@@ -1,0 +1,44 @@
+[project]
+name = "gravitraxconnect"
+version = "0.3.2"
+keywords = ["gravitrax", "Ravensburger", "marble tracks", "kugelbahn", "STEM"]
+description = "Library to communicate with a Gravitrax Connect BLE-Bridge"
+authors = [{name="placeholder", email="placeholder@ravensburger.de"}]
+maintainers = [{name="placeholder", email="placeholder@ravensburger.de"},{name="placeholder", email="placeholder@ravensburger.de"}]
+license = {file = "LICENSE.txt"}
+readme = "README.md"
+requires-python=">=3.10"
+
+classifiers = [
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Operating System :: POSIX :: Linux",
+    "Framework :: AsyncIO",
+    "Natural Language :: English",
+    "Topic :: Education",
+    "Topic :: Games/Entertainment",
+]
+
+dependencies = [
+    "bleak>=0.19.1",
+    "asyncio>=3.4.3",
+]
+
+[project.urls]
+homepage = "https://www.ravensburger.de/entdecken/ravensburger-marken/gravitrax/index.html"
+documentation = "TODO"
+repository = "https://github.com/Ravensburger-Verlag-GmbH/GraviTrax-Connect"
+
+[build-system]
+requires = [
+"setuptools"
+]
+build-backend = "setuptools.build_meta"

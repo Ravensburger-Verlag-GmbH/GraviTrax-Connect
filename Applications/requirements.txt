@@ -1,0 +1,7 @@
+pynput>=1.7.6
+PySimpleGUI>=4.60.4
+RPi.GPIO >= 0.7.1 
+colorama >= 0.4.6 
+termcolor >= 2.2.0
+gravitraxconnect >= 0.1.0
+bleak >= 0.19.5
