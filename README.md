@@ -29,8 +29,8 @@ In beiden Fällen sollte angezeigt werden, welche Versionsnummer aktuell auf ihr
 
 2. Navigieren Sie in das Download Verzeichnis und entpacken Sie die Zip-Datei.
 
-3. Sie sollten nun einen Ordner mit dem Namen gravitraxconnect_X.X.X in ihrem Download Verzeichnis sehen. 
-Öffnen Sie diesen Ordner und kopieren den Pfad aus der Adressleiste. Der Pfad sollte in etwa so aussehen "C:\Users\\"Ihr Benutzername"\Downloads\gravitraxconnect_X.X.X"
+3. Sie sollten nun einen Ordner mit dem Namen "GraviTrax Connect Library Bleak" in ihrem Download Verzeichnis sehen. 
+Öffnen Sie diesen Ordner und kopieren den Pfad aus der Adressleiste. Der Pfad sollte in etwa so aussehen "C:\Users\\"Ihr Benutzername"\Downloads\GraviTrax Connect Library Bleak"
 
 4. Öffnen Sie die Windows Eingabeaufforderung.
 
@@ -63,14 +63,14 @@ pip install bleak
 
 ## Programme
 
-Der Bibliothek´s Ordner beinhaltet einen Unterordner examples in welchem sich einige Beispielprogramme der grundlegenden Funktionen befinden. 
+Der Bibliothek´s Ordner beinhaltet einen Unterordner examples in welchem sich einige Beispielprogramme grundlegender Funktionen befinden. 
 
-Ausführlichere Beispielprogramme finden Sie in dem Ordner Scripts welcher sich im selben Verzeichnis wie diese Datei befinden sollte. Hierfür werden ggf. zusätzliche Bibliotheken benötigt welche in der textdatei requirements.txt aufgeführt werden. Die Installation erfolgt in dem entsprechenden Verzeichnis mit dem Kommando: 
+Ausführlichere Beispielprogramme finden Sie in dem Ordner "Applications". Hierfür werden ggf. zusätzliche Bibliotheken benötigt, welche in der textdatei requirements.txt aufgeführt werden. Die Installation erfolgt in dem entsprechenden Verzeichnis mit dem Kommando: 
 ```shell
 pip install -r .\requirements.txt
 ``` 
 
-Im Ordner "Bleak Library Applications" befinden sich folgende Anwendungen:
+Folgende Anwendungen befinden sich in dem Ordner:
 - gravitrax_CLI: Ein kommandozeilen Programm welches das Senden und Empfangen von Signalen erlaubt
 - gravitrax_GUI: Eine grafische Benutzeroberfläche welches das Senden und Empfangen von Signalen erlaubt.
 - gravitrax_gpio: Ein Skript welches die GPIO-Pins eines Raspberry Pi verwendet
