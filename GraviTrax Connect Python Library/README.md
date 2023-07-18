@@ -60,7 +60,7 @@ The dependencies should be downloaded automatically during the installation of g
 
 # Usage
 
-A detailed explanation on how to use this Library can be found in the [How to use the GravitraxConnect Library](Docs/How%20to%20use%20the%20GravitraxConnect%20Library.md) File.
+A detailed explanation on how to use this Library can be found in the [How to use the GravitraxConnect Library](docs/How%20to%20use%20the%20GravitraxConnect%20Library.md) File.
 
 # Licence
 MIT License
