@@ -30,7 +30,7 @@ In beiden Fällen sollte angezeigt werden, welche Versionsnummer aktuell auf ihr
 
 2. In das Download-Verzeichnis navigieren, die Zip-Datei "GraviTrax-Connect-main.zip" entpacken und in gewünschten Zielordner verschieben.
 
-3. In den Bibliotheks-Ordner navigieren und den Pfad kopieren. Dieser könnte bspw. so aussehen: "C:\Users\Username\Downloads\GraviTrax-Connect-main\GraviTrax Connect Python Library"
+3. In den Bibliotheks-Ordner navigieren und den Pfad kopieren. Dieser könnte bspw. so aussehen: "C:\Users\Username\Downloads\GraviTrax-Connect-main\GraviTrax-Connect-Python-Library"
 
 4. Windows Eingabeaufforderung öffnen.
 
