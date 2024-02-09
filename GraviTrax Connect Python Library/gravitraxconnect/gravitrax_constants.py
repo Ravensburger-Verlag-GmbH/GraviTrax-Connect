@@ -111,3 +111,4 @@ DICT_BATTERYSTRINGS = {
     3:"Battery level is high",
     3.1:"Battery is full",
 }
+
