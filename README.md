@@ -61,7 +61,7 @@ It should print the installed version number.
 
 2. Navigate to the download directory, unpack the "GraviTrax-Connect-main.zip" zip file and move it to the desired target folder.
 
-3. Navigate to the library folder and copy the path. It could look like this: "C:\Users\Username\Downloads\GraviTrax-Connect-main\GraviTrax Connect Python Library".
+3. Navigate to the library folder and copy the path. It could look like this: "C:\Users\Username\Downloads\GraviTrax-Connect-main\GraviTrax-Connect-Python-Library".
 
 4. Open the Windows command prompt.
 
