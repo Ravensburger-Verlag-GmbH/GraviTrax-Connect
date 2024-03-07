@@ -19,18 +19,18 @@ This Python library is used to communicate with a GraviTrax Bluetooth Connect st
 # Features
 The library supports the following features:
 
-- [Receiving signals](GraviTrax%20Connect%20Python%20Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md#notifications) ( [Example](GraviTrax%20Connect%20Python%20Library/examples/example_notification.py) ) from supported Gravitrax Power stones. The library detects the status and color of the signal, as well as the type of stone that sends the signal. It's possible to define a custom callback function that is executed when a signal is received. 
-- [Sending Signals](GraviTrax%20Connect%20Python%20Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md#sending-signals) to Gravitrax Power Stones. 
+- [Receiving signals](GraviTrax-Connect-Python-Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md#notifications) ( [Example](GraviTrax-Connect-Python-Library/examples/example_notification.py) ) from supported Gravitrax Power stones. The library detects the status and color of the signal, as well as the type of stone that sends the signal. It's possible to define a custom callback function that is executed when a signal is received. 
+- [Sending Signals](GraviTrax-Connect-Python-Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md#sending-signals) to Gravitrax Power Stones. 
     - Send signals to specific stone types, for example, to all green switches.
-    - Send signals to all stones that have a certain color. ( [Example](GraviTrax%20Connect%20Python%20Library/examples/example_signals.py) )
+    - Send signals to all stones that have a certain color. ( [Example](GraviTrax-Connect-Python-Library/examples/example_signals.py) )
     - Send signals as a specific Stone
-    - Send signals as a reaction to a received signal. ( [Example](GraviTrax%20Connect%20Python%20Library/examples/example_signal_repeater.py) )
-    - Send arbitrary bytes of data ( [Example](GraviTrax%20Connect%20Python%20Library/examples/example_send_bytes.py) )
-- [Read out information](GraviTrax%20Connect%20Python%20Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md#getting-information-about-the-bridge) ( [Example](GraviTrax%20Connect%20Python%20Library/examples/example_bridge_infos.py) ) about the Bridge ( Battery Level, Firmware Version, etc. )
-- [Bridge only mode](GraviTrax%20Connect%20Python%20Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md#bridge-mode): Stones in this mode will ignore all signals that are not from a bridge
-- Display [logging](GraviTrax%20Connect%20Python%20Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md#logging) information about ongoing operations.
+    - Send signals as a reaction to a received signal. ( [Example](GraviTrax-Connect-Python-Library/examples/example_signal_repeater.py) )
+    - Send arbitrary bytes of data ( [Example](GraviTrax-Connect-Python-Library/examples/example_send_bytes.py) )
+- [Read out information](GraviTrax-Connect-Python-Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md#getting-information-about-the-bridge) ( [Example](GraviTrax-Connect-Python-Library/examples/example_bridge_infos.py) ) about the Bridge ( Battery Level, Firmware Version, etc. )
+- [Bridge only mode](GraviTrax-Connect-Python-Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md#bridge-mode): Stones in this mode will ignore all signals that are not from a bridge
+- Display [logging](GraviTrax-Connect-Python-Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md#logging) information about ongoing operations.
 
-A more detailed overview of the features this library supports can be found in [How to use the Gravitrax Connect Library](GraviTrax%20Connect%20Python%20Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md), and working examples using this library in the [examples](GraviTrax%20Connect%20Python%20Library/examples/) folder.
+A more detailed overview of the features this library supports can be found in [How to use the Gravitrax Connect Library](GraviTrax-Connect-Python-Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md), and working examples using this library in the [examples](GraviTrax-Connect-Python-Library/examples/) folder.
 
 # Manual installation 
 ## Installing Python
@@ -90,8 +90,8 @@ If it didn’t work, try again by using the following command. You need an inter
 pip install bleak
 ```
 
-## example programs
-the library folder contains a folder "examples". Here you can find scripts showing basic functions.
+## Example programs
+The library folder contains a folder "examples". Here you can find scripts showing basic functions.
 
 More complex applications can be found in the folder "Applications".
 To use the example applications, you will need to install some more libraries. Therefore, navigate with the command line center to corresponding directory and use the following command:
@@ -123,4 +123,4 @@ The dependencies should be downloaded automatically during the installation of g
 
 # Usage
 
-A detailed explanation of how to use this library can be found in the [How to use the GravitraxConnect Library](GraviTrax%20Connect%20Python%20Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md) File.
+A detailed explanation of how to use this library can be found in the [How to use the GravitraxConnect Library](GraviTrax-Connect-Python-Library/docs/How%20to%20use%20the%20GravitraxConnect%20Library.md) File.
