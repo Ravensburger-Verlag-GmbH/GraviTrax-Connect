@@ -1,3 +1,4 @@
+--extra-index-url https://PySimpleGUI.net/install
 PySimpleGUI>=4.60.4
 gravitraxconnect >= 0.1.0
 bleak >= 0.19.5
