@@ -6,9 +6,6 @@ repos:
         args: [--fix]
         types: [python]
         files: ^(GraviTrax-Connect-Python-Library|Applications)/.*\.py$
-      - id: ruff-format
-        types: [python]
-        files: ^(GraviTrax-Connect-Python-Library|Applications)/.*\.py$
 
   - repo: https://github.com/psf/black
     rev: 24.10.0
@@ -30,4 +27,4 @@ repos:
     hooks:
       - id: codespell
         args:
-          - --skip=*.pdf,*.svg,*.png,*.jpg,*.jpeg,*.bmp,*.gif,*.yml,*.yaml,*.json
+          - --skip=*.pdf,*.svg,*.png,*.jpg,*.jpeg,*.bmp,*.gif,*.yml,*.yaml,*.json,*.drawio,README.de.md
