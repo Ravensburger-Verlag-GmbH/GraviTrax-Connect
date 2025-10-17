@@ -1,4 +1,4 @@
-"""Gravitrax Reaction Game: 
+"""Gravitrax Reaction Game:
 A command line Reaction game that uses gravitrax power stones.
 Needed Stones:
 - 2 Levers
@@ -7,8 +7,8 @@ Needed Stones:
 - 2 Finishes
 - 3 Switches
 
-The game generates a sequence of colors. The player can use Switches 
-to direct the automatically released marbles through the correct 
+The game generates a sequence of colors. The player can use Switches
+to direct the automatically released marbles through the correct
 Finishes and Triggers.
 """
 
@@ -18,10 +18,11 @@ Finishes and Triggers.
 
 import asyncio
 import random
-import colorama
 
+import colorama
+from pynput.keyboard import Key, Listener
 from termcolor import colored
-from pynput.keyboard import Listener, Key
+
 from gravitraxconnect import gravitrax_bridge as gb
 from gravitraxconnect import gravitrax_constants as gv
 
@@ -48,18 +49,18 @@ disconnected = False
 
 
 async def shutdown():
-    """Shutdown the main Thread of the Script"""
+    """Shutdown the main Thread of the Script."""
     finished.set()
 
 
 def disconnect_callback(bridge: gb.Bridge, **kwargs):
-    """Callback for disconnects"""
+    """Callback for disconnects."""
     if kwargs.get("user_disconnected"):
         finished.set()
 
 
 async def notification_callback(bridge: gb.Bridge, **signal):
-    """callback for received Signals"""
+    """Callback for received Signals."""
     global score, colors, fin_count, playsound
     stonetype = signal.get("Stone")
     color = signal.get("Color")
@@ -75,21 +76,17 @@ async def notification_callback(bridge: gb.Bridge, **signal):
                 score += 1
         if color != sequence[0]:
             score -= 1
-            print(f"Wrong! Next Colors: ", end="")
+            print("Wrong! Next Colors: ", end="")
             if playsound:
-                winsound.PlaySound(
-                    "WQ.FX.Wrong.wav", winsound.SND_ASYNC | winsound.SND_ALIAS
-                )
+                winsound.PlaySound("WQ.FX.Wrong.wav", winsound.SND_ASYNC | winsound.SND_ALIAS)
         else:
             print("Correct! Next Colors: ", end="")
             if playsound:
-                winsound.PlaySound(
-                    "WQ.FX.GameStart.wav", winsound.SND_ASYNC | winsound.SND_ALIAS
-                )
+                winsound.PlaySound("WQ.FX.GameStart.wav", winsound.SND_ASYNC | winsound.SND_ALIAS)
 
         sequence.pop(0)
         if fin_count < 7:
-            for _,color in enumerate(sequence):
+            for _, color in enumerate(sequence):
                 print(
                     colored(f"{colors[color-1]} ", colors[color - 1]),
                     end="",
@@ -104,7 +101,7 @@ async def notification_callback(bridge: gb.Bridge, **signal):
 
 
 def on_press(key):
-    """ Evaluation of Button presses"""
+    """Evaluation of Button presses."""
     global b, finished, difficulty, listener, loop
     if difficulty == 1:
         status = gv.STATUS_ALL
@@ -129,11 +126,9 @@ def on_press(key):
         if difficulty == 0:
             asyncio.run_coroutine_threadsafe(release_timed(10), loop)
         else:
-            asyncio.run_coroutine_threadsafe(
-                b.send_signal(gv.STATUS_STARTER, gv.COLOR_RED), loop
-            )
+            asyncio.run_coroutine_threadsafe(b.send_signal(gv.STATUS_STARTER, gv.COLOR_RED), loop)
     elif key == Key.esc:
-        gb.log_print(f"Stop Signal received: Closing Program")
+        gb.log_print("Stop Signal received: Closing Program")
         asyncio.run_coroutine_threadsafe(
             b.disconnect(timeout=15, dc_callback_on_timeout=True), loop
         )
@@ -141,7 +136,7 @@ def on_press(key):
 
 
 def level():
-    """Start new level and generate random color sequence"""
+    """Start new level and generate random color sequence."""
     global score, fin_count
     sequence.clear()
     score = 0
@@ -161,7 +156,7 @@ def level():
 
 
 async def release_timed(delay):
-    """Release 7 marbles with a timegap inbetween"""
+    """Release 7 marbles with a timegap between."""
     try:
         for _ in range(7):
             await b.send_signal(gv.STATUS_STARTER, gv.COLOR_RED)
@@ -169,8 +164,9 @@ async def release_timed(delay):
     except asyncio.CancelledError:
         return
 
+
 async def main():
-    """Start the keyboard listener and connect to the bridge"""
+    """Start the keyboard listener and connect to the bridge."""
     global finished, loop, listener
     loop = asyncio.get_running_loop()
     try:
@@ -182,7 +178,7 @@ async def main():
     colorama.init()
 
     gb.logger.disabled = False
-    gb.log_print(f"Searching for Bridge")
+    gb.log_print("Searching for Bridge")
     try:
         if await b.connect(try_reconnect=True, dc_callback=disconnect_callback):
             await b.start_bridge_mode()
@@ -190,7 +186,7 @@ async def main():
             gb.log_print("Start Level with F4=hard, F5=very hard, F6=impossible")
             listener.start()
         else:
-            gb.log_print(f"Could not find Bridge to connect to")
+            gb.log_print("Could not find Bridge to connect to")
 
         await finished.wait()
     except asyncio.CancelledError:

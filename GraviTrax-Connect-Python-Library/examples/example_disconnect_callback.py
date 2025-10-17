@@ -1,6 +1,6 @@
 """Gravitrax Example Script: Disconnect Callback
-This Script connects to a Gravitrax Bridge for 5 seconds. 
-The disconnect callback is executed when the bridge disconnects. 
+This Script connects to a Gravitrax Bridge for 5 seconds.
+The disconnect callback is executed when the bridge disconnects.
 """
 
 import asyncio
@@ -11,7 +11,7 @@ disconnected = asyncio.Event()
 
 
 def disconnect_callback(bridge: gb.Bridge, **kwargs):
-    """Callback for disconnects"""
+    """Callback for disconnects."""
     if kwargs.get("user_disconnected"):
         gb.log_print("Successfully Disconnected from Bridge!", bridge=bridge)
     else:
@@ -20,7 +20,8 @@ def disconnect_callback(bridge: gb.Bridge, **kwargs):
 
 
 async def main():
-    """Connect to to a bridge disconnect it and wait for the disconnect to conclude"""
+    """Connect to to a bridge disconnect it and wait for the disconnect to
+    conclude."""
     gb.logger.disabled = False
     gb.log_print("Searching for Bridge")
     bridge = gb.Bridge()

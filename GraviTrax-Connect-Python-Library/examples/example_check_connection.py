@@ -1,7 +1,6 @@
-"""Connection Check example Script
-Running Code in a continuos loop that checks if 
-the bridge is still connected
-"""
+"""Connection Check example Script Running Code in a continuous loop that checks
+if the bridge is still connected."""
+
 import asyncio
 import sys
 
@@ -9,8 +8,7 @@ from gravitraxconnect import gravitrax_bridge as gb
 
 
 async def main():
-    """Connect to the bridge and print for how long it is connected
-    """
+    """Connect to the bridge and print for how long it is connected."""
     bridge = gb.Bridge()
     gb.logger.disabled = False
     try:

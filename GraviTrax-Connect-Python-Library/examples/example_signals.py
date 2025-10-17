@@ -1,13 +1,13 @@
-"""Example Script for sending Signals
-This Script sends Signals with Different Colors over the Bridge.The resends parameter 
-specifies how often a package is resend. 
-A lower value can lead to package loss. The resends_gap parameter 
-specifies how long the artificial delay behind every transmission is. Usually this 
-value can be set to 0 if the resends value is sufficiently high.
-The default values are set to values that are moste likely to work on most Systems. 
-It´s also possible to adjust which stones are targeted by changing the status value. 
-The Status values for available Gravitrax Power stones can be found in the 
-gravitrax_constants file.
+"""Example Script for sending Signals This Script sends Signals with Different
+Colors over the Bridge.The resends parameter specifies how often a package is
+resend.
+
+A lower value can lead to package loss. The resends_gap parameter specifies how long the
+artificial delay behind every transmission is. Usually this value can be set to 0 if the
+resends value is sufficiently high. The default values are set to values that are moste
+likely to work on most Systems. It´s also possible to adjust which stones are targeted by
+changing the status value. The Status values for available Gravitrax Power stones can be
+found in the gravitrax_constants file.
 """
 
 import asyncio
@@ -17,8 +17,7 @@ from gravitraxconnect import gravitrax_constants
 
 
 async def main():
-    """Send a Signal Sequence of red, green and blue signals
-    """
+    """Send a Signal Sequence of red, green and blue signals."""
     bridge = gb.Bridge()
     gb.logger.disabled = False
     try:

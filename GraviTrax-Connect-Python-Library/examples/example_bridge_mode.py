@@ -1,8 +1,8 @@
-"""Bridge Mode Example Script
-When sending a Bridge Mode Signal the receiving stones will only listen to 
-Signals coming from a Bridge. Other Senders like the Remote are Ignored. This Script
-puts all receiving devices into Bridge mode for 10 seconds and sends a Signal after
-5 Seconds 
+"""Bridge Mode Example Script When sending a Bridge Mode Signal the receiving
+stones will only listen to Signals coming from a Bridge.
+
+Other Senders like the Remote are Ignored. This Script puts all receiving devices into
+Bridge mode for 10 seconds and sends a Signal after 5 Seconds
 """
 
 import asyncio
@@ -12,8 +12,7 @@ from gravitraxconnect import gravitrax_constants
 
 
 async def main():
-    """Start the bridge Mode and send a testsignal
-    """
+    """Start the bridge Mode and send a testsignal."""
     try:
         bridge = gb.Bridge()
         gb.logger.disabled = False

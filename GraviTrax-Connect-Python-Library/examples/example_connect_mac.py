@@ -1,5 +1,5 @@
-"""Gravitrax Example Script: Connect to Bridge with the MAC-Address
-"""
+"""Gravitrax Example Script: Connect to Bridge with the MAC-Address"""
+
 import asyncio
 
 from gravitraxconnect import gravitrax_bridge as gb
@@ -8,7 +8,7 @@ gb.logger.disabled = False
 
 
 async def main():
-    """Connect to a bridge by MAC-Address"""
+    """Connect to a bridge by MAC-Address."""
     addr_list = await gb.scan_bridges(timeout=10)
 
     if len(addr_list) == 0:

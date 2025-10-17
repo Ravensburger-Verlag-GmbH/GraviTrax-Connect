@@ -1,12 +1,12 @@
 """Gravitrax Example Script: Disconnect Timeout
 When calling disconnect() the dc_callback_on_timeout parameter can be
-set to trigger the disconnect callback when the disconnect 
+set to trigger the disconnect callback when the disconnect
 attempt times out. This can be used to ensure that a script
 that is supposed to shut down if the bridge is disconnected
 doesn't run forever even if the disconnect fails.
 If the disconnect times out it still continues to run. The timeout
-is just a way to call the disconnect callback early if the disconnect 
-takes to long. As a result if the disconnect times out but finishes afterwards 
+is just a way to call the disconnect callback early if the disconnect
+takes to long. As a result if the disconnect times out but finishes afterwards
 the disconnect callback is called twice.
 """
 
@@ -14,12 +14,11 @@ import asyncio
 
 from gravitraxconnect import gravitrax_bridge as gb
 
-
 finished = asyncio.Event()
 
 
 def disconnect_callback(bridge: gb.Bridge, **kwargs):
-    """Callback for disconnects"""
+    """Callback for disconnects."""
     try:
         if kwargs.get("by_timeout"):
             gb.log_print("Disconnect timed out", bridge=bridge)
@@ -32,7 +31,7 @@ def disconnect_callback(bridge: gb.Bridge, **kwargs):
 
 
 async def main():
-    """Connect to a bridge and wait for the timeout of the disconnect"""
+    """Connect to a bridge and wait for the timeout of the disconnect."""
     gb.logger.disabled = False
     gb.log_print("Searching for Bridge")
     bridge = gb.Bridge()

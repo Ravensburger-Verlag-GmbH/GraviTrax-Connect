@@ -1,6 +1,6 @@
-"""Gravitrax Example Script: 
+"""Gravitrax Example Script:
 This script uses the GPIO Pins of a Raspberry Pi. For every Color(R,G,B)
-there is a Input as well as an output pin.  
+there is a Input as well as an output pin.
 If a input pin is set to high a signal with the corresponding color
 is send. The output pins are set to the last send or received signal.
 """
@@ -38,7 +38,7 @@ pin_in_blue = 5
 
 
 def disconnect_callback(bridge: gb.Bridge, **kwargs):
-    """Callback for disconnects"""
+    """Callback for disconnects."""
     gb.log_print("Bridge was disconnected", bridge=bridge)
 
 
@@ -57,6 +57,7 @@ def setOutput(color):
 
 def gpio_callback(channel):
     """Executed when one of the input pins is connected to ground.
+
     Args:
         - channel: Number of the detected pin
     """
@@ -73,11 +74,9 @@ def gpio_callback(channel):
 
 
 async def notification_callback(bridge: gb.Bridge, **signal):
-    """Callback function for received Notifications
+    """Callback function for received Notifications.
 
-    When a signal is received the output is set to the color
-    of the received signal.
-
+    When a signal is received the output is set to the color of the received signal.
     """
     global notif_counter
 
@@ -104,8 +103,9 @@ async def notification_callback(bridge: gb.Bridge, **signal):
         bridge=bridge,
     )
 
+
 async def main():
-    """Enable GPIo Pins and attach """
+    """Enable GPIo Pins and attach."""
     global loop
     loop = asyncio.get_running_loop()
     gb.logger.disabled = False
@@ -123,15 +123,9 @@ async def main():
     GPIO.setup(pin_in_blue, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     # Set Callback for input Pins
-    GPIO.add_event_detect(
-        pin_in_red, GPIO.FALLING, callback=gpio_callback, bouncetime=150
-    )
-    GPIO.add_event_detect(
-        pin_in_green, GPIO.FALLING, callback=gpio_callback, bouncetime=150
-    )
-    GPIO.add_event_detect(
-        pin_in_blue, GPIO.FALLING, callback=gpio_callback, bouncetime=150
-    )
+    GPIO.add_event_detect(pin_in_red, GPIO.FALLING, callback=gpio_callback, bouncetime=150)
+    GPIO.add_event_detect(pin_in_green, GPIO.FALLING, callback=gpio_callback, bouncetime=150)
+    GPIO.add_event_detect(pin_in_blue, GPIO.FALLING, callback=gpio_callback, bouncetime=150)
 
     gb.log_print(f"Looking for connection: {name}")
     try:
@@ -155,4 +149,3 @@ if __name__ == "__main__":
         GPIO.cleanup()
 
     gb.log_print("Program finished")
-    

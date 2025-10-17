@@ -1,8 +1,9 @@
-"""Bridge ID Example Script
-Bridges can be grouped together by assigning IDs to them. 
-In this Example all connected Bridges get split into two Groups. 
-The group with id=0 prints an output when receiving red and green signals.
-The group with id=1 prints an output when receiving a blue signal
+"""Bridge ID Example Script Bridges can be grouped together by assigning IDs to
+them.
+
+In this Example all connected Bridges get split into two Groups. The group with id=0
+prints an output when receiving red and green signals. The group with id=1 prints an
+output when receiving a blue signal
 """
 
 import asyncio
@@ -12,9 +13,9 @@ from gravitraxconnect import gravitrax_constants
 
 
 async def notification_callback(bridge: gb.Bridge, **signal):
-    """Callback for Received Notifications
+    """Callback for Received Notifications.
 
-    Different colors are displayed depending on the id of the receiving bridge 
+    Different colors are displayed depending on the id of the receiving bridge
     """
     stone = signal.get("Stone")
     color = signal.get("Color")
@@ -32,14 +33,11 @@ async def notification_callback(bridge: gb.Bridge, **signal):
     if (bridge.id == 0 and color != gravitrax_constants.COLOR_BLUE) or (
         bridge.id == 1 and color == gravitrax_constants.COLOR_BLUE
     ):
-        gb.log_print(
-            f"{color_lookup:5} detected from", f"Stone {stone_lookup:10}", bridge=bridge
-        )
+        gb.log_print(f"{color_lookup:5} detected from", f"Stone {stone_lookup:10}", bridge=bridge)
 
 
 async def main():
-    """Connect to all available bridges and split them in 2 groups
-    """
+    """Connect to all available bridges and split them in 2 groups."""
     try:
         b_list = [gb.Bridge()]
         index = 0

@@ -1,7 +1,9 @@
-"""Repeat signals using the Notification callback 
-When sending signals with a stonetype different than gv.STONE_BRIDGE this signal
-is received again as a Notification. This script uses this to repeat received signal
-until the bridge is disconnected or the program closed.
+"""Repeat signals using the Notification callback When sending signals with a
+stonetype different than gv.STONE_BRIDGE this signal is received again as a
+Notification.
+
+This script uses this to repeat received signal until the bridge is disconnected or the
+program closed.
 """
 
 import asyncio
@@ -9,17 +11,16 @@ import asyncio
 from gravitraxconnect import gravitrax_bridge as gb
 from gravitraxconnect import gravitrax_constants
 
-
 finished = asyncio.Event()
 
 
 def disconnect_callback(bridge: gb.Bridge, **kwargs):
-    """Callback for disconnects"""
+    """Callback for disconnects."""
     finished.set()
 
 
 async def notification_callback(bridge: gb.Bridge, **signal):
-    """Repeat any incoming Signal after 200ms"""
+    """Repeat any incoming Signal after 200ms."""
     try:
         if signal.get("Header") == gravitrax_constants.MSG_DEFAULT_HEADER:
             status = signal.get("Status")
@@ -34,7 +35,7 @@ async def notification_callback(bridge: gb.Bridge, **signal):
 
 
 async def main():
-    """Connect to the bridge and enable the Notifications"""
+    """Connect to the bridge and enable the Notifications."""
     bridge = gb.Bridge()
     try:
         gb.logger.disabled = False
