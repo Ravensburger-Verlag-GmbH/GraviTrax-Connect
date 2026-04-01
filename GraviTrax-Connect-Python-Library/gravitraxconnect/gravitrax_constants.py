@@ -101,7 +101,6 @@ DICT_VAL_STONE = {
     STONE_STARTER: "starter",
     STONE_CONTROLLER: "controller",
     STONE_BRIDGE: "bridge",
-    STONE_SOUND:"sound",
     STONE_COLOR:"color",
     STONE_CANNON: "cannon",
 }
