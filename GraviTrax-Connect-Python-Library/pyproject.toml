@@ -1,6 +1,6 @@
 [project]
 name = "gravitraxconnect"
-version = "0.3.3"
+version = "0.3.4"
 keywords = ["gravitrax", "Ravensburger", "marble tracks", "kugelbahn", "STEM"]
 description = "Library to communicate with a Gravitrax Connect BLE-Bridge"
 authors = [{name="placeholder", email="placeholder@ravensburger.de"}]
