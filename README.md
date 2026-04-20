@@ -35,7 +35,7 @@ A more detailed overview of the features this library supports can be found in [
 # Manual installation 
 ## Installing Python
 
-Please use Python version 3.1 or newer. Otherwis,e not all functions will work properly. There are several ways to install it:
+Please use Python version 3.10 or newer. Otherwise,e not all functions will work properly. There are several ways to install it:
 
 ### Using python.org
 You can find the latest version at https://www.python.org/downloads/. During installation, check the “Add Python to Path” box.

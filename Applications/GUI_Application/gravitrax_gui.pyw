@@ -334,7 +334,7 @@ def make_help_window() -> sg.Window:
         " 0 the duration is awaited without a signal being send",
         "Preset": "Contains presets for commonly used signal settings. The preset is"
         " applied when clicking it in the dropdown list. Presets can be added with the"
-        " Add button ot loaded from a File",
+        " Add button to loaded from a File",
         "Reset": "Reset the Signal Options to the Default values",
         "Save Presets": "Save the current Preset List in a json File.This overwrites the"
         " previous File when an existing file is selected. ",
@@ -676,7 +676,7 @@ def gui_worker_thread():
                 )
             elif window_main["IF"].get_text() == "DONE":
                 if if_mode_condition:
-                    # remove previos occurrences of the Signal
+                    # remove previous occurrences of the Signal
                     for item in reversed(notilist):
                         if (
                             item.status == if_mode_condition.status
@@ -1341,7 +1341,7 @@ def main():
     window_main.bind("<F7>", "IF")
     window_main.bind("<F8>", "Queuemode")
 
-    # Seperate resizable Window for the Log Output
+    # Separate resizable Window for the Log Output
     window_log = make_log_window()
     window_main.force_focus()
     gb.log_print("Waiting for asyncio Loop to start", level="DEBUG")

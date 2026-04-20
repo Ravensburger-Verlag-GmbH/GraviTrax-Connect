@@ -1,6 +1,7 @@
 """Example Script for the print_services function.
-This Script connects to all available Bridges and prints out the Battery Level
-as well as the services offered by the bridge.
+
+This Script connects to all available Bridges and prints out the Battery Level as well as
+the services offered by the bridge.
 """
 
 import asyncio
@@ -9,7 +10,7 @@ from gravitraxconnect import gravitrax_bridge as gb
 
 
 async def main():
-    """Print out the services offered by the available bridges"""
+    """Print out the services offered by the available bridges."""
     bridges = [gb.Bridge()]
     gb.logger.disabled = False
     index = 0

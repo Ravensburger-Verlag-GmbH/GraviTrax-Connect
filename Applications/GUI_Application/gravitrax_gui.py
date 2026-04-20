@@ -1,28 +1,26 @@
-"""Graphical user Interface for the gravitraxconnect library
-A Graphical User Interface Application using the gravitraxconnect 
-Python Library.
+"""Graphical user Interface for the gravitraxconnect library A Graphical User
+Interface Application using the gravitraxconnect Python Library.
 
 Features:
 - Send Signals and receive Notifications for incoming Signals
-- Modify the Signal Parameters like the Stone type or which Stones should 
+- Modify the Signal Parameters like the Stone type or which Stones should
 receive the signal
 - Queue multiple Signals
-- Implement If/ Then Logic: If Signal X then do Signal a, Signal b, ...... 
+- Implement If/ Then Logic: If Signal X then do Signal a, Signal b, ......
 - Timer: Measure the time between two Signals
 - Loading saved Signal presets from a file. (filename can be passed as an argument)
-
 """
 
-import time
 import asyncio
 import json
-
-from datetime import datetime
+import time
 from collections import namedtuple
+from datetime import datetime
 from queue import Queue
-from threading import Thread, Event
+from threading import Event, Thread
 
 import PySimpleGUI as sg
+
 from gravitraxconnect import gravitrax_bridge as gb
 from gravitraxconnect import gravitrax_constants as gv
 
@@ -83,9 +81,7 @@ window_help = None  # Window Containing the Manual
 window_log = None  # Window for the Log Output
 
 # Events to ensure correct  startup and shutdown behavior
-startup_event = (
-    Event()
-)  # Prevents the GUI from starting before the asyncio loop is running
+startup_event = Event()  # Prevents the GUI from starting before the asyncio loop is running
 
 finished_event = None
 
@@ -107,7 +103,7 @@ notilist = []
 
 
 def read_preset_file(filename):
-    """Use the json module to load a preset file into the preset dictionary"""
+    """Use the json module to load a preset file into the preset dictionary."""
     global signal_preset_dict
     try:
         signal_preset_dict = dict(json.load(open(filename, "rb")))
@@ -117,13 +113,13 @@ def read_preset_file(filename):
     except FileNotFoundError:
         print_log("No presets file found")
         return False
-    except:
+    except Exception:
         return False
     return True
 
 
 def save_preset_file(filename):
-    """Use the json module to save the preset dictionary into a json file"""
+    """Use the json module to save the preset dictionary into a json file."""
     json.dump(
         signal_preset_dict,
         open(filename, "w", encoding="locale"),
@@ -132,7 +128,8 @@ def save_preset_file(filename):
 
 
 def set_buttons(buttons: list, active=True, text=None):
-    """Enable,Disable or change the Button text for multiple buttons at once"""
+    """Enable,Disable or change the Button text for multiple buttons at
+    once."""
     global window_main
     for button in buttons:
         if not text:
@@ -142,7 +139,7 @@ def set_buttons(buttons: list, active=True, text=None):
 
 
 def print_log(text, add_timestamp=True, text_color=None, end=None):
-    """Print text in the multiline Element of the logging Window"""
+    """Print text in the multiline Element of the logging Window."""
     global window_log
     if window_log is None:
         return
@@ -164,15 +161,14 @@ def print_log(text, add_timestamp=True, text_color=None, end=None):
 
 
 async def connect() -> bool:
-    """Connect to a Gravitrax Power Bridge
-    After Connecting the Battery level and the Firmware and Hardware Version are
-    printed in the log. The Notifications are enabled as well
+    """Connect to a Gravitrax Power Bridge After Connecting the Battery level
+    and the Firmware and Hardware Version are printed in the log.
+
+    The Notifications are enabled as well
     """
     global b
     set_buttons(["Connect"], False)
-    if await b.connect(
-        timeout=60, dc_callback=disconnect_callback, try_reconnect=False
-    ):
+    if await b.connect(timeout=60, dc_callback=disconnect_callback, try_reconnect=False):
         await b.notification_enable(notification_callback)
         print_log(f"Connected to {b.get_name()}")
         print_log(f"MAC-Address: {b.get_address()}")
@@ -181,9 +177,7 @@ async def connect() -> bool:
         print_log(await b.request_battery_string())
         print_log("", add_timestamp=False)
         set_buttons(["Quit"], text="Disconnect")
-        set_buttons(
-            ["Red", "Green", "Blue", "Lock", "Unlock", "Queuemode", "IF", "Timer"]
-        )
+        set_buttons(["Red", "Green", "Blue", "Lock", "Unlock", "Queuemode", "IF", "Timer"])
         return True
     else:
         print_log("Could not connect to a Bridge")
@@ -192,20 +186,19 @@ async def connect() -> bool:
 
 
 def disconnect_callback(bridge: gb.Bridge, **kwargs):
-    """Function that is executed when the Bridge is disconnected"""
+    """Function that is executed when the Bridge is disconnected."""
     if kwargs.get("user_disconnected"):
         print_log("Bridge successfully disconnected")
     else:
         print_log("Connection to Bridge lost")
     set_buttons(["Quit"], text="Quit")
     set_buttons(["Connect"])
-    set_buttons(
-        ["Red", "Green", "Blue", "Lock", "Unlock", "Queuemode", "IF", "Timer"], False
-    )
+    set_buttons(["Red", "Green", "Blue", "Lock", "Unlock", "Queuemode", "IF", "Timer"], False)
 
 
 async def notification_callback(bridge: gb.Bridge, **signal):
-    """Handling of received Notifications
+    """Handling of received Notifications.
+
     - Incoming Signals are printed in the Log Window
     - If the signal is the start signal for the timer the current time is stored in
     the start_times list
@@ -260,7 +253,7 @@ async def notification_callback(bridge: gb.Bridge, **signal):
 
 
 async def send(list_queue):
-    """Reads the SignalTuple Items from a list or queue and sends them"""
+    """Reads the SignalTuple Items from a list or queue and sends them."""
     if isinstance(list_queue, Queue):
         while not list_queue.empty():
             signal = list_queue.get()
@@ -287,9 +280,8 @@ async def send(list_queue):
 
 
 async def send_signals(status, color_channel, stone, count, resends, resend_gap, pause):
-    """Send Signals to the Bridge
-    When count is set to 0 the specified pause is awaited.
-    """
+    """Send Signals to the Bridge When count is set to 0 the specified pause is
+    awaited."""
     if count == 0:
         await asyncio.sleep(pause)
     else:
@@ -305,7 +297,7 @@ async def send_signals(status, color_channel, stone, count, resends, resend_gap,
 
 
 def make_help_window() -> sg.Window:
-    """Create the Window with the manual for the application"""
+    """Create the Window with the manual for the application."""
 
     def formatted_print(headline: str, dictionary: dict):
         help_ml.print(headline, justification="c", font=FONT_H1, autoscroll=False)
@@ -334,7 +326,7 @@ def make_help_window() -> sg.Window:
         " 0 the duration is awaited without a signal being send",
         "Preset": "Contains presets for commonly used signal settings. The preset is"
         " applied when clicking it in the dropdown list. Presets can be added with the"
-        " Add button ot loaded from a File",
+        " Add button to loaded from a File",
         "Reset": "Reset the Signal Options to the Default values",
         "Save Presets": "Save the current Preset List in a json File.This overwrites the"
         " previous File when an existing file is selected. ",
@@ -404,7 +396,7 @@ def make_help_window() -> sg.Window:
 
 
 def make_log_window() -> sg.Window:
-    """Create the Window with the logging output"""
+    """Create the Window with the logging output."""
     global window_main
     main_loc = window_main.current_location()
     min_size = (300, window_main.size[1])
@@ -421,10 +413,7 @@ def make_log_window() -> sg.Window:
     )
 
     # Determine the best location to place the log window
-    if (
-        main_loc[0] + window_main.size[0] + min_size[0] + 10
-        < sg.Window.get_screen_size()[0]
-    ):
+    if main_loc[0] + window_main.size[0] + min_size[0] + 10 < sg.Window.get_screen_size()[0]:
         loc = (main_loc[0] + window_main.size[0] + 10, main_loc[1])
     else:
         loc = (main_loc[0] + 30, main_loc[1] + 30)
@@ -446,8 +435,10 @@ def make_log_window() -> sg.Window:
 
 def run_gui():
     """Reads inputs from the GUI and puts them in the eventqueue for the
-    gui_worker_thread. The Closing of windows is handled directly in this
-    function and not by the worker thread
+    gui_worker_thread.
+
+    The Closing of windows is handled directly in this function and not by the worker
+    thread
     """
     global window_main, window_help, window_log, eventqueue
     while True:
@@ -475,9 +466,10 @@ def run_gui():
 
 
 def read_signal_options(values) -> SignalTuple:
-    """Reads the values from the Signal Options Comboboxes and
-    returns them as int values. If a Combobox contains an invalid
-    value it is reset.
+    """Reads the values from the Signal Options Comboboxes and returns them as
+    int values.
+
+    If a Combobox contains an invalid value it is reset.
     """
     try:
         status = gv.DICT_STATUS[values["StatusCombo"]]
@@ -500,9 +492,7 @@ def read_signal_options(values) -> SignalTuple:
             if stone not in range(0, 256):
                 raise ValueError("Value outside accepted range") from exc
         except ValueError:
-            print_log(
-                "Stonetype Value outside accepted range. Resetting to default Value"
-            )
+            print_log("Stonetype Value outside accepted range. Resetting to default Value")
             stone = DEFAULT_STONE[1]
             window_main["StoneCombo"].update(DEFAULT_STONE[0])
 
@@ -545,12 +535,13 @@ def read_signal_options(values) -> SignalTuple:
 
 
 def gui_worker_thread():
-    """Thread that gets input events from the eventqueue and does event specific work
+    """Thread that gets input events from the eventqueue and does event
+    specific work.
+
     Depending on the input event:
     - UI-Elements are updated
     - Coroutines are scheduled to run in the asyncthread
     - Trigger Signals are added to Notification List used for IF/Then Mode
-
     """
     global window_main, b, notilist, loop, timer, start_signal, stop_signal
     ifmode = False
@@ -559,14 +550,9 @@ def gui_worker_thread():
     if_mode_condition = None  # temp variable for the Trigger Signal in IF-Mode.
     gb.log_print("GUI Worker started", level="DEBUG")
     while True:
-
         event, values = eventqueue.get()
         # Events are Ignored if the Button etc. is disabled
-        if (
-            event
-            and isinstance(window_main[event], sg.Button)
-            and window_main[event].Disabled
-        ):
+        if event and isinstance(window_main[event], sg.Button) and window_main[event].Disabled:
             continue
         elif event == sg.WINDOW_CLOSED:
             break
@@ -676,7 +662,7 @@ def gui_worker_thread():
                 )
             elif window_main["IF"].get_text() == "DONE":
                 if if_mode_condition:
-                    # remove previos occurrences of the Signal
+                    # remove previous occurrences of the Signal
                     for item in reversed(notilist):
                         if (
                             item.status == if_mode_condition.status
@@ -688,18 +674,14 @@ def gui_worker_thread():
                     if_mode_condition = None
                 ifmode = False
                 set_buttons(["IF"], text="If/Then")
-                set_buttons(
-                    ["Pause", "Count", "Resends", "ResendGap", "Queuemode", "Timer"]
-                )
+                set_buttons(["Pause", "Count", "Resends", "ResendGap", "Queuemode", "Timer"])
                 print_log("If-Mode finished", text_color=IFMODE_COLOR)
             continue
         elif event in ("Timer", "key-t"):  # Button to set the timer signals
             if window_main["Timer"].get_text() == "Timer":
                 timer = True
                 set_buttons(["Timer"], text="Cancel")
-                set_buttons(
-                    ["Pause", "Count", "Resends", "ResendGap", "Queuemode", "IF"], False
-                )
+                set_buttons(["Pause", "Count", "Resends", "ResendGap", "Queuemode", "IF"], False)
                 print_log(
                     "Timer Mode: Enter the Signal that starts the timer",
                     text_color=TIMER_COLOR,
@@ -709,9 +691,7 @@ def gui_worker_thread():
                 start_signal = None
                 stop_signal = None
                 set_buttons(["Timer"], text="Timer")
-                set_buttons(
-                    ["Pause", "Count", "Resends", "ResendGap", "Queuemode", "IF"]
-                )
+                set_buttons(["Pause", "Count", "Resends", "ResendGap", "Queuemode", "IF"])
                 print_log("Timer stopped", text_color=TIMER_COLOR)
             continue
         # A Signal Button was pressed
@@ -776,9 +756,7 @@ def gui_worker_thread():
                     )
                 )
 
-                print_log(
-                    f"Added to Queue: {count} x", text_color=QUEUEMODE_COLOR, end=" "
-                )
+                print_log(f"Added to Queue: {count} x", text_color=QUEUEMODE_COLOR, end=" ")
                 print_log(
                     f"{color_name}",
                     add_timestamp=False,
@@ -823,7 +801,7 @@ def gui_worker_thread():
                     stone=stone,
                     actionlist=[],
                 )
-                print_log(f"Condition Set: Color", text_color=IFMODE_COLOR, end=" ")
+                print_log("Condition Set: Color", text_color=IFMODE_COLOR, end=" ")
                 print_log(
                     f"{color_name}",
                     add_timestamp=False,
@@ -844,7 +822,7 @@ def gui_worker_thread():
                 start_signal = TriggerSignal(
                     color=color, status=status, stone=stone, actionlist=None
                 )
-                print_log(f"Timer Start Signal: ", text_color=TIMER_COLOR, end=" ")
+                print_log("Timer Start Signal: ", text_color=TIMER_COLOR, end=" ")
                 print_log(
                     f"{color_name}",
                     add_timestamp=False,
@@ -862,7 +840,7 @@ def gui_worker_thread():
                     color=color, status=status, stone=stone, actionlist=None
                 )
 
-                print_log(f"Timer Stop Signal: ", text_color=TIMER_COLOR, end=" ")
+                print_log("Timer Stop Signal: ", text_color=TIMER_COLOR, end=" ")
                 print_log(
                     f"{color_name}",
                     add_timestamp=False,
@@ -874,9 +852,7 @@ def gui_worker_thread():
                     add_timestamp=False,
                     text_color=TIMER_COLOR,
                 )
-                set_buttons(
-                    ["Pause", "Count", "Resends", "ResendGap", "Queuemode", "IF"]
-                )
+                set_buttons(["Pause", "Count", "Resends", "ResendGap", "Queuemode", "IF"])
             else:
                 print_log(
                     f"{count} x Sending {color_name} as {stone_name} "
@@ -885,9 +861,7 @@ def gui_worker_thread():
                 )
 
                 asyncio.run_coroutine_threadsafe(
-                    send_signals(
-                        status, color, stone, count, resends, resend_gap, pause
-                    ),
+                    send_signals(status, color, stone, count, resends, resend_gap, pause),
                     loop,
                 )
         else:
@@ -897,14 +871,17 @@ def gui_worker_thread():
 
 
 async def shutdown():
-    """Coroutine that can be scheduled from other threads to close the asyncthread"""
+    """Coroutine that can be scheduled from other threads to close the
+    asyncthread."""
     finished_event.set()
 
 
 async def asyncthread():
-    """Thread that runs an asyncio Event Loop
-    This thread is used to run asyncio coroutines scheduled from other Threads.
-    In this application it's exclusively used for the Bluetooth communication with the bridge
+    """Thread that runs an asyncio Event Loop This thread is used to run
+    asyncio coroutines scheduled from other Threads.
+
+    In this application it's exclusively used for the Bluetooth communication with the
+    bridge
     """
     global loop, finished_event
     loop = asyncio.get_running_loop()
@@ -1217,7 +1194,7 @@ def main():
             default_value=DEFAULT_PRESET,
             values=list(signal_preset_dict.keys()),
             expand_x=True,
-            enable_events=True
+            enable_events=True,
             # Tooltips are disabled for now as they cause issues with the detection
             #  of button presses (https://github.com/PySimpleGUI/PySimpleGUI/issues/5036)
             # tooltip="Wait time in Seconds that can be added after a Signal \nin Queuemode",
@@ -1341,7 +1318,7 @@ def main():
     window_main.bind("<F7>", "IF")
     window_main.bind("<F8>", "Queuemode")
 
-    # Seperate resizable Window for the Log Output
+    # Separate resizable Window for the Log Output
     window_log = make_log_window()
     window_main.force_focus()
     gb.log_print("Waiting for asyncio Loop to start", level="DEBUG")

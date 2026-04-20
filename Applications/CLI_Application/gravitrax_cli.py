@@ -1,16 +1,16 @@
 """Gravitrax Example Script: Using Keyboard buttons to send signals.
-This script binds the sending of signals to Keyboard Buttons. Received 
+This script binds the sending of signals to Keyboard Buttons. Received
 Notifications are displayed.
 The input for the status and stonetype can be done by typing the name of the
-intended Stone or the int value. 
+intended Stone or the int value.
 """
 
 import asyncio
-
-
-from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
-from pynput.keyboard import Listener, Key
+from threading import Lock
+
+from pynput.keyboard import Key, Listener
+
 from gravitraxconnect import gravitrax_bridge as gb
 from gravitraxconnect import gravitrax_constants as gv
 
@@ -56,6 +56,7 @@ notif_counter = 0  # Tracks how many Notifications where received
 
 def print_input_info(name, dictionary: dict):
     """Prints out the key/value pairs of a dictionary.
+
     Used to provide additional information for user inputs.
     """
     print("=============================================")
@@ -66,7 +67,7 @@ def print_input_info(name, dictionary: dict):
 
 
 async def asyncinput(prompt="") -> str:
-    """input that is run asynchronously"""
+    """Input that is run asynchronously."""
     # Flush keyboard buffer before getting input
     try:
         import sys  # pylint: disable=import-outside-toplevel
@@ -80,13 +81,11 @@ async def asyncinput(prompt="") -> str:
             msvcrt.getch()
 
     with ThreadPoolExecutor(1, "asyncinput") as executor:
-        return (
-            await asyncio.get_running_loop().run_in_executor(executor, input, prompt)
-        ).rstrip()
+        return (await asyncio.get_running_loop().run_in_executor(executor, input, prompt)).rstrip()
 
 
 def disconnect_callback(bridge: gb.Bridge, **kwargs):
-    """Callback function that is executed when the bridge disconnects"""
+    """Callback function that is executed when the bridge disconnects."""
     if kwargs.get("by_timeout"):
         gb.log_print("Disconnect timed out", bridge=bridge)
         finished.set()
@@ -106,12 +105,12 @@ def sanitize_input(user_input, cast_to=int, unsigned=True):
         return user_input
     except (ValueError, TypeError):
         return None
-    except:  # pylint: disable=bare-except
+    except Exception:
         return None
 
 
 async def color_input(prompt):
-    """User Input for a color value"""
+    """User Input for a color value."""
     red_list = ["red", "r", "rot", "1"]
     green_list = [
         "green",
@@ -138,7 +137,7 @@ async def color_input(prompt):
 
 
 async def stone_input(prompt):
-    """User Input for a stone value"""
+    """User Input for a stone value."""
     global stone, input_Lock
     input_Lock.acquire()
     print_input_info("Stonetype", gv.DICT_STONE)
@@ -158,7 +157,7 @@ async def stone_input(prompt):
 
 
 async def status_input(prompt):
-    """User input for a status value"""
+    """User input for a status value."""
     global status, input_Lock
     input_Lock.acquire()
     print_input_info("Status", gv.DICT_STATUS)
@@ -170,9 +169,7 @@ async def status_input(prompt):
             status = gv.STATUS_ALL
             gb.log_print("Unknown Status Value")
     try:
-        gb.log_print(
-            f"Message Status switched to {gv.DICT_VAL_STATUS[status]}", bridge=b
-        )
+        gb.log_print(f"Message Status switched to {gv.DICT_VAL_STATUS[status]}", bridge=b)
     except KeyError:
         gb.log_print(f"Message Status switched to {status}", bridge=b)
     finally:
@@ -180,7 +177,7 @@ async def status_input(prompt):
 
 
 async def send_signals():
-    """Get signal information from the user and sends the specified Signals"""
+    """Get signal information from the user and sends the specified Signals."""
     global status, stone, input_Lock, finished
     input_Lock.acquire()
     try:
@@ -213,7 +210,7 @@ async def send_signals():
 
 
 async def notification_callback(bridge: gb.Bridge, **signal):
-    """Callback function that is executed when a notification is received"""
+    """Callback function that is executed when a notification is received."""
 
     def lookup(key, table, prefix: str):
         try:
@@ -241,7 +238,7 @@ async def notification_callback(bridge: gb.Bridge, **signal):
 
 
 def on_press(key):
-    """Handling of keyboard presses"""
+    """Handling of keyboard presses."""
     global b, status, finished, stone, listener, loop
 
     if key == Key.esc:
@@ -253,46 +250,34 @@ def on_press(key):
         return
     try:
         k = key.char
-    except:  # pylint: disable=bare-except
+    except Exception:
         k = key.name
     if k == "r":
-        asyncio.run_coroutine_threadsafe(
-            b.send_signal(status, gv.COLOR_RED, stone=stone), loop
-        )
+        asyncio.run_coroutine_threadsafe(b.send_signal(status, gv.COLOR_RED, stone=stone), loop)
     elif k == "g":
-        asyncio.run_coroutine_threadsafe(
-            b.send_signal(status, gv.COLOR_GREEN, stone=stone), loop
-        )
+        asyncio.run_coroutine_threadsafe(b.send_signal(status, gv.COLOR_GREEN, stone=stone), loop)
     elif k == "b":
-        asyncio.run_coroutine_threadsafe(
-            b.send_signal(status, gv.COLOR_BLUE, stone=stone), loop
-        )
+        asyncio.run_coroutine_threadsafe(b.send_signal(status, gv.COLOR_BLUE, stone=stone), loop)
 
     elif k == "u":
-        asyncio.run_coroutine_threadsafe(
-            b.send_signal(gv.STATUS_UNLOCK, gv.COLOR_RED), loop
-        )
+        asyncio.run_coroutine_threadsafe(b.send_signal(gv.STATUS_UNLOCK, gv.COLOR_RED), loop)
     elif k == "l":
-        asyncio.run_coroutine_threadsafe(
-            b.send_signal(gv.STATUS_LOCK, gv.COLOR_RED), loop
-        )
+        asyncio.run_coroutine_threadsafe(b.send_signal(gv.STATUS_LOCK, gv.COLOR_RED), loop)
 
 
 def on_release(key):
-    """handling of keyboard releases"""
+    """Handling of keyboard releases."""
     global b, loop
     if input_Lock.locked():
         return
     try:
         k = key.char
-    except:  # pylint: disable=bare-except
+    except Exception:
         k = key.name
     if k == "k":
         asyncio.run_coroutine_threadsafe(send_signals(), loop)
     elif k == "s":
-        asyncio.run_coroutine_threadsafe(
-            status_input("Enter status (name or value):"), loop
-        )
+        asyncio.run_coroutine_threadsafe(status_input("Enter status (name or value):"), loop)
     elif k == "t":
         asyncio.run_coroutine_threadsafe(
             stone_input("Enter stonetype value (name or value):"), loop
@@ -312,7 +297,7 @@ async def main():
     gb.logger.disabled = False
     print(gravitrax_cli)
 
-    gb.log_print(f"Searching for Bridge")
+    gb.log_print("Searching for Bridge")
     try:
         if not await b.connect(
             try_reconnect=True,

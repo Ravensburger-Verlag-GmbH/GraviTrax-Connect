@@ -1,0 +1,30 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: [--fix]
+        types: [python]
+        files: ^(GraviTrax-Connect-Python-Library|Applications)/.*\.py$
+
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        types: [python]
+        files: ^(GraviTrax-Connect-Python-Library|Applications)/.*\.py$
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [--profile=black]
+        types: [python]
+        files: ^(GraviTrax-Connect-Python-Library|Applications)/.*\.py$
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        args:
+          - --skip=*.pdf,*.svg,*.png,*.jpg,*.jpeg,*.bmp,*.gif,*.yml,*.yaml,*.json,*.drawio,README.de.md

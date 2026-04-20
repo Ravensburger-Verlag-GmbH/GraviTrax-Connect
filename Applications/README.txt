@@ -9,5 +9,5 @@ the requirementsRaspPi.txt on a Raspberry Pi to also install the Library necessa
 The scripts can be started with the command:
 python <scriptname>.py
 
-Examples for the more basic functionallity of the Library can be found in the examples folder in the root 
+Examples for the more basic functionality of the Library can be found in the examples folder in the root 
 directory of the Library 

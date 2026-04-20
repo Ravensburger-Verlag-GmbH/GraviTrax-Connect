@@ -154,7 +154,7 @@ It's possible to specify a custom callback function that is executed when the Br
 The callback function can be passed to [connect()](#connect). 
 Alternatively, the member variable 'dc_callback' can be accessed directly.
 If the `try_reconnect` member variable is set to `True` the callback will try to reestablish an interrupted connection. 
-After a successful reconnect the notifications are reenabled by default. This can be changed by setting `restart_notifications` to `False` 
+After a successful reconnect the notifications are re-enabled by default. This can be changed by setting `restart_notifications` to `False` 
 
 ```python
 def disconnect_callback(bridge: gb.Bridge, **kwargs):

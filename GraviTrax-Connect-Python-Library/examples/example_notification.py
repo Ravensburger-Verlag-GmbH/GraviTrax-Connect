@@ -1,7 +1,7 @@
 """Gravitrax Example Script: Handling Notifications
-This Script connects to a Bridge and displays inforation about 
+This Script connects to a Bridge and displays information about
 received Notifications as well as the count of all notifications
-received at runtime. All protocol fields of the received signal 
+received at runtime. All protocol fields of the received signal
 can be accessed as Keyword Arguments. The program closes after
 10 Notifications are received.
 """
@@ -17,15 +17,15 @@ disconnected = asyncio.Event()
 
 
 def disconnect_callback(bridge: gb.Bridge, **kwargs):
-    """Callback function for disconnects"""
+    """Callback function for disconnects."""
     disconnected.set()
 
 
 async def notification_callback(bridge: gb.Bridge, **signal):
-    """Callback function for incoming Signals
+    """Callback function for incoming Signals.
 
-    This callback is executed when a Notification i.e a Signal is received.
-    After 10 Signals the finished event is set which closes the program.
+    This callback is executed when a Notification i.e a Signal is received. After 10
+    Signals the finished event is set which closes the program.
     """
     global counter
 
@@ -48,9 +48,7 @@ async def notification_callback(bridge: gb.Bridge, **signal):
         # Header, Reserved, id and Checksum
         stone = lookup(signal.get("Stone"), gravitrax_constants.DICT_VAL_STONE, None)
         color = lookup(signal.get("Color"), gravitrax_constants.LOOKUP_COLOR, None)
-        status = lookup(
-            signal.get("Status"), gravitrax_constants.DICT_VAL_STATUS, "Color"
-        )
+        status = lookup(signal.get("Status"), gravitrax_constants.DICT_VAL_STATUS, "Color")
 
         # Printing information about the received signal
         gb.log_print(
@@ -63,7 +61,7 @@ async def notification_callback(bridge: gb.Bridge, **signal):
 
 
 async def main():
-    """Recieve Notifications from the Bridge"""
+    """Receive Notifications from the Bridge."""
     bridge = gb.Bridge()
     gb.logger.disabled = False
     gb.log_set_level("INFO")

@@ -1,7 +1,8 @@
-"""Constant values used for the gravitraxconnect library
-    This file contains parameters for the Bluetooth Communication and 
-    other constant values. It is recommended to use these values 
-    in your programs for improved readability and maintainability.
+"""Constant values used for the gravitraxconnect library This file contains
+parameters for the Bluetooth Communication and other constant values.
+
+It is recommended to use these values in your programs for improved readability and
+maintainability.
 """
 
 # Default Name of Bridge
@@ -115,17 +116,17 @@ LOOKUP_BATTERYSTRINGS = [
 LOOKUP_BATTERYVALUES = [64, 96, 128, 160, 100]  # <2V  # 2V-2.5V  # 2.5V-3V  # 3V  # 3V+
 
 DICT_BATTERYVALUES = {
-    64:2,
-    96:2.5,
-    128:2.9,
-    160:3,
-    100:3.1,
+    64: 2,
+    96: 2.5,
+    128: 2.9,
+    160: 3,
+    100: 3.1,
 }
 
 DICT_BATTERYSTRINGS = {
-    2:"Battery is empty.",
-    2.5:"Battery level is low",
-    2.9:"Battery level is medium",
-    3:"Battery level is high",
-    3.1:"Battery is full",
+    2: "Battery is empty.",
+    2.5: "Battery level is low",
+    2.9: "Battery level is medium",
+    3: "Battery level is high",
+    3.1: "Battery is full",
 }

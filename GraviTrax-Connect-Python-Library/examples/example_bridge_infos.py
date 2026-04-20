@@ -1,7 +1,6 @@
-"""Read out information from multiple Bridges
-This Script connects to all available Bridges and prints out the Battery Level
-as well as the hardware and Firmware Version.
-"""
+"""Read out information from multiple Bridges This Script connects to all
+available Bridges and prints out the Battery Level as well as the hardware and
+Firmware Version."""
 
 import asyncio
 
@@ -11,8 +10,7 @@ finished = asyncio.Event()
 
 
 async def main():
-    """Connect to all available Bridges and read out information     
-    """
+    """Connect to all available Bridges and read out information."""
     try:
         bridges = [gb.Bridge()]
         gb.logger.disabled = False

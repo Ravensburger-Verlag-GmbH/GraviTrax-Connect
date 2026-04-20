@@ -1,9 +1,9 @@
-"""gravitrax_bridge.py: Connect and interact with a GravitraxConnect Bridge
+"""gravitrax_bridge.py: Connect and interact with a GravitraxConnect Bridge.
 
 This is the main file of the gravitraxconnect Library. It contains the Bridge Class
-which is used for everything related to the communication with a GravitraxConnect 
-Bridge, as well as some extra utility functions. The logger used in this Library can 
-be accessed with gravitrax_bridge.logger. 
+which is used for everything related to the communication with a GravitraxConnect
+Bridge, as well as some extra utility functions. The logger used in this Library can
+be accessed with gravitrax_bridge.logger.
 
 Bridge Class:
     Member Variables:
@@ -13,7 +13,7 @@ Bridge Class:
     - hardware: The hardware version
     - id: int value for grouping Bridges
     - dc_callback: Callback function for disconnects
-    - try_reconnect: Try to reconnect after disconnect(Bool)   
+    - try_reconnect: Try to reconnect after disconnect(Bool)
     - restart_notifications: Restart Notifications after reconnect(Bool)
     - noti_callback: Callback function for Notifications
 
@@ -41,32 +41,28 @@ Utility Functions:
     - add_checksum: add the checksum to a signal
     - log_print: print with the logger
     - log_set_level: Set the logging level of the logger
-
 """
 
-import random
-import re
+import asyncio
 import logging
 import platform
-import asyncio
+import random
+import re
 
-from bleak import BleakScanner, BleakClient
-from bleak.exc import BleakError, BleakDeviceNotFoundError
+from bleak import BleakClient, BleakScanner
+from bleak.backends.characteristic import BleakGATTCharacteristic
 from bleak.backends.device import BLEDevice
 from bleak.backends.scanner import AdvertisementData
-from bleak.backends.characteristic import BleakGATTCharacteristic
+from bleak.exc import BleakDeviceNotFoundError, BleakError
 
 from gravitraxconnect import gravitrax_constants
-
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 stream_handler = logging.StreamHandler()
 stream_handler.name = f"{__name__}_stream_handler"
 stream_handler.setFormatter(
-    logging.Formatter(
-        "%(asctime)s.%(msecs)03d - %(levelname)s: %(message)s", "%H:%M:%S"
-    )
+    logging.Formatter("%(asctime)s.%(msecs)03d - %(levelname)s: %(message)s", "%H:%M:%S")
 )
 stream_handler.setLevel(logging.INFO)
 logger.addHandler(stream_handler)
@@ -144,9 +140,7 @@ class Bridge:
             log_print("No Bridge found to connect to", level="WARNING")
             return False
 
-        self.client = BleakClient(
-            device, disconnected_callback=self.__disconnect_callback
-        )
+        self.client = BleakClient(device, disconnected_callback=self.__disconnect_callback)
         log_print(f"Connecting to {device.name}:{device.address}", level="DEBUG")
         try:
             await self.client.connect(timeout=timeout)
@@ -191,8 +185,8 @@ class Bridge:
         dc_callback_on_timeout: bool = False,
         _user: bool = True,
     ) -> bool:
-        """Terminate the connection to the bridge.
-        Closes the Connection to the Bridge.
+        """Terminate the connection to the bridge. Closes the Connection to the
+        Bridge.
 
         Args:
             - timeout: The time in seconds the function waits for the disconnect to finish.
@@ -205,12 +199,11 @@ class Bridge:
             - True: Successfully disconnected from the Bridge.
             - False: The Disconnect timed out, no bridge was connected or an error occurred while
             disconnecting.
-
         """
         if not isinstance(self.client, BleakClient):
             log_print(
                 "Disconnecting:",
-                f"BleakClient Object was not initialized. Please connect to a bridge first.",
+                "BleakClient Object was not initialized. Please connect to a bridge first.",
                 bridge=self,
                 level="ERROR",
             )
@@ -229,9 +222,7 @@ class Bridge:
             self.__user_disconnected = True
         try:
             log_print("Disconnecting", bridge=self, level="DEBUG")
-            await asyncio.wait_for(
-                asyncio.shield(self.client.disconnect()), timeout=timeout
-            )
+            await asyncio.wait_for(asyncio.shield(self.client.disconnect()), timeout=timeout)
         except TimeoutError:
             log_print(
                 f"Disconnect is taking longer than {timeout} seconds",
@@ -250,7 +241,7 @@ class Bridge:
         return True
 
     def __disconnect_callback(self, client: BleakClient) -> bool:
-        """Handle the disconnect of the bridge
+        """Handle the disconnect of the bridge.
 
         This function is called when the bridge is disconnected
         If the disconnect wasn't requested by the user an try_reconnect
@@ -261,7 +252,6 @@ class Bridge:
         Args:
             - client: A BleakClient from the bleak Library. Used to get
             the MAC address of the disconnected bridge
-
         """
         log_print(
             "Bridge disconnected",
@@ -270,9 +260,7 @@ class Bridge:
         )
         try:
             if self.dc_callback:
-                self.dc_callback(
-                    self, user_disconnected=self.__user_disconnected, by_timeout=False
-                )
+                self.dc_callback(self, user_disconnected=self.__user_disconnected, by_timeout=False)
         except TypeError as exc:
             log_print(
                 f"Disconnect Callback: Failed to call Disconnect Callback ({str(exc)})",
@@ -330,12 +318,9 @@ class Bridge:
         Returns:
             - True: Successfully enabled the notifications.
             - False: Enabling the notifications failed.
-
         """
         if not isinstance(uuid, str):
-            raise TypeError(
-                "Disabling Notifications failed: The uuid {uuid} is not a string"
-            )
+            raise TypeError("Disabling Notifications failed: The uuid {uuid} is not a string")
         if not callable(callback):
             raise TypeError("callback is not callable")
         try:
@@ -343,7 +328,7 @@ class Bridge:
         except AttributeError:
             log_print(
                 "Enabling Notifications failed:",
-                f"BleakClient Object was not initialized. Please connect to a bridge first.",
+                "BleakClient Object was not initialized. Please connect to a bridge first.",
                 bridge=self,
                 level="ERROR",
             )
@@ -360,10 +345,8 @@ class Bridge:
         self.noti_callback = callback
         return True
 
-    async def notification_disable(
-        self, uuid: str = gravitrax_constants.UUID_NOTIF
-    ) -> None:
-        """Disable Notifications from the bridge
+    async def notification_disable(self, uuid: str = gravitrax_constants.UUID_NOTIF) -> None:
+        """Disable Notifications from the bridge.
 
         Args:
             - uuid: The uuid to stop receive Notifications from. Defaults to
@@ -374,16 +357,14 @@ class Bridge:
             - False: Disabling the Notifications failed.
         """
         if not isinstance(uuid, str):
-            raise TypeError(
-                "Disabling Notifications failed: The uuid {uuid} is not a string"
-            )
+            raise TypeError("Disabling Notifications failed: The uuid {uuid} is not a string")
 
         try:
             await self.client.stop_notify(uuid)
         except AttributeError:
             log_print(
                 "Disabling Notifications failed:",
-                f"BleakClient Object was not initialized. Please connect to a bridge first.",
+                "BleakClient Object was not initialized. Please connect to a bridge first.",
                 bridge=self,
                 level="ERROR",
             )
@@ -401,7 +382,7 @@ class Bridge:
     async def __notification_handler(
         self, characteristic: BleakGATTCharacteristic, data: bytearray
     ) -> None:
-        """Handle received Notifications
+        """Handle received Notifications.
 
         This Method is called when the bridge receives a Notification.
         The Notification Data is searched for messages that conform to the
@@ -415,12 +396,10 @@ class Bridge:
             Library
             - data: Bytearray containing the Data of the Notification
         """
-        message = " ".join("{:02x}".format(x) for x in data)
+        message = " ".join(f"{x:02x}" for x in data)
         # Check if data conforms to Gravitrax Signal Protocol
 
-        recv_signals = [
-            match.group() for match in re.finditer(r"13(\s[0-9a-fA-F]{2}){6}", message)
-        ]
+        recv_signals = [match.group() for match in re.finditer(r"13(\s[0-9a-fA-F]{2}){6}", message)]
 
         if len(recv_signals) == 0:
             await self.noti_callback(
@@ -438,9 +417,7 @@ class Bridge:
 
         await self.__noti_lock.acquire()
         try:
-
             for recv_signal in recv_signals:
-
                 # Check if the same Signal was already received
                 if recv_signal in self.__last_notifications:
                     continue
@@ -528,7 +505,7 @@ class Bridge:
                 error_event.set()
             log_print(
                 "Error sending Data:",
-                f"BleakClient Object was not initialized. Please connect to a bridge first.",
+                "BleakClient Object was not initialized. Please connect to a bridge first.",
                 bridge=self,
                 level="ERROR",
             )
@@ -545,7 +522,7 @@ class Bridge:
         stone: int = gravitrax_constants.STONE_BRIDGE,
         error_event: asyncio.Event = None,
     ) -> None:
-        """Send a Signal to a Bridge
+        """Send a Signal to a Bridge.
 
         Args:
             - status: int value specifying which Blocks should react to the
@@ -587,9 +564,7 @@ class Bridge:
         self.__send_lock.release()
         checksum = (header + stone + status + reserved + message_id) % 256
         await self.send_bytes(
-            bytes(
-                [header, stone, status, reserved, message_id, checksum, color_channel]
-            ),
+            bytes([header, stone, status, reserved, message_id, checksum, color_channel]),
             uuid=uuid,
             resends=resends,
             resend_gap=resend_gap,
@@ -644,33 +619,28 @@ class Bridge:
             )
 
     async def start_bridge_mode(self) -> None:
-        """Put Gravitrax Power stones in Bridge Only mode
+        """Put Gravitrax Power stones in Bridge Only mode.
 
-        Send a signal with the Lock Status to the Gravitrax Bridge.
-        All Gravitrax Power stones that receive this signal will switch to
-        the Bridge only mode. In this mode only signals from
-        Gravitrax Bridges are accepted.
+        Send a signal with the Lock Status to the Gravitrax Bridge. All Gravitrax Power
+        stones that receive this signal will switch to the Bridge only mode. In this mode
+        only signals from Gravitrax Bridges are accepted.
         """
-        await self.send_signal(
-            gravitrax_constants.STATUS_LOCK, gravitrax_constants.COLOR_RED
-        )
+        await self.send_signal(gravitrax_constants.STATUS_LOCK, gravitrax_constants.COLOR_RED)
         log_print("Bridge Mode enabled", bridge=self, level="INFO")
 
     async def stop_bridge_mode(self) -> None:
-        """Put Gravitrax Power stones in Normal mode
-        Sends signal with the Unlock Status over the Gravitrax Bridge.
-        All Gravitrax Power stones that receive this signal will switch out
-        of the Bridge only mode.
+        """Put Gravitrax Power stones in Normal mode Sends signal with the
+        Unlock Status over the Gravitrax Bridge.
+
+        All Gravitrax Power stones that receive this signal will switch out of the Bridge
+        only mode.
         """
-        await self.send_signal(
-            gravitrax_constants.STATUS_UNLOCK, gravitrax_constants.COLOR_RED
-        )
+        await self.send_signal(gravitrax_constants.STATUS_UNLOCK, gravitrax_constants.COLOR_RED)
         log_print("Bridge Mode disabled", bridge=self, level="INFO")
 
-    async def __read_chraceristic(
-        self, characteristic: str, error_prefix: str
-    ) -> (bytearray | None):
-        """A wrapper for BleakClient.read_gatt_char() with additional Error handling
+    async def __read_chraceristic(self, characteristic: str, error_prefix: str) -> bytearray | None:
+        """A wrapper for BleakClient.read_gatt_char() with additional Error
+        handling.
 
         Arg:
             - characteristic: uuid of the characteristic to read
@@ -685,7 +655,7 @@ class Bridge:
         except AttributeError:
             log_print(
                 error_prefix,
-                f"BleakClient Object was not initialized. Please connect to a bridge first.",
+                "BleakClient Object was not initialized. Please connect to a bridge first.",
                 bridge=self,
                 level="ERROR",
             )
@@ -704,13 +674,12 @@ class Bridge:
             return None
 
     async def request_bridge_info(self) -> tuple | None:
-        """Read Firmware and Hardware Version of Gravitrax Bridges
+        """Read Firmware and Hardware Version of Gravitrax Bridges.
 
         returns:
             - Tuple containing the firmware version and hardware version as
             int values
             - None: Retrieving the Information failed
-
         """
         if not (
             data := await self.__read_chraceristic(
@@ -739,7 +708,7 @@ class Bridge:
         return (self.firmware, self.hardware)
 
     async def request_battery(self) -> int | None:
-        """Read out the Battery Level from the Bridge
+        """Read out the Battery Level from the Bridge.
 
         Returns:
             - approximate Battery Voltage (2->3.1)
@@ -765,7 +734,7 @@ class Bridge:
             return None
 
     async def request_battery_string(self) -> str | None:
-        """Get descriptive string of Battery Level
+        """Get descriptive string of Battery Level.
 
         Returns:
             - String describing the Battery Level
@@ -783,7 +752,7 @@ class Bridge:
             return None
 
     def get_address(self) -> str | None:
-        """Returns the MAC-Address of the connected Bridge
+        """Returns the MAC-Address of the connected Bridge.
 
         Returns: String
             - MAC-Address of Bridge
@@ -795,7 +764,7 @@ class Bridge:
         return self.__address
 
     def get_name(self) -> str | None:
-        """Returns the Name of the connected Bridge
+        """Returns the Name of the connected Bridge.
 
         Returns: String
             - MAC-Address of Bridge
@@ -807,7 +776,7 @@ class Bridge:
         return self.name
 
     async def print_services(self) -> None:
-        """Prints out the Services of the Bridge"""
+        """Prints out the Services of the Bridge."""
         log_print("Services of the Bridge", level="INFO")
         for service in self.client.services:
             print(service)
@@ -824,10 +793,9 @@ async def scan_bridges(
     do_print: bool = False,
     stop_on_hit: bool = False,
 ) -> None:
-    """Scan for Bluetooth LE Devices.
-    The MAC addresses(as String) of all found Bridges are returned
-    after the timeout is reached. When do_print is enabled found
-    devices are printed out immediately after they are discovered.
+    """Scan for Bluetooth LE Devices. The MAC addresses(as String) of all found
+    Bridges are returned after the timeout is reached. When do_print is enabled
+    found devices are printed out immediately after they are discovered.
 
     Args:
         name: Discovered devices are filtered by this name. Use "" to scan for all names
@@ -848,16 +816,14 @@ async def scan_bridges(
     try:
         timeout = float(timeout)
     except ValueError as exc:
-        raise ValueError(
-            "Invalid Timeout for scan_bridges(). Use float,int,...."
-        ) from exc
+        raise ValueError("Invalid Timeout for scan_bridges(). Use float,int,....") from exc
 
     address_list = []
     log_prev_state = logger.disabled
     logger.disabled = not do_print
 
     def discover_callback(device: BLEDevice, advertisement_data: AdvertisementData):
-        if (device.name == name or name == "") and not device.address in address_list:
+        if (device.name == name or name == "") and device.address not in address_list:
             address_list.append(device.address)
             if do_print:
                 log_print(advertisement_data.local_name, ":", device.address)
@@ -874,8 +840,7 @@ async def scan_bridges(
 
 
 def calc_checksum(data: bytes, for_received: bool = False) -> int | None:
-    """
-    Calculates the Checksum for a 7-Byte Message
+    """Calculates the Checksum for a 7-Byte Message.
 
     Args:
         - data: The 7-Byte Message
@@ -919,8 +884,8 @@ def add_checksum(data: bytes, for_received: bool = False) -> bytes | None:
     )
 
 
-def log_print(*text, bridge: Bridge = None, level: (str | int) = "INFO") -> None:
-    """Print something with the logger
+def log_print(*text, bridge: Bridge = None, level: str | int = "INFO") -> None:
+    """Print something with the logger.
 
     Args:
         *text: values to be printed
@@ -945,7 +910,7 @@ def log_print(*text, bridge: Bridge = None, level: (str | int) = "INFO") -> None
         logger.error(f"Wrong Type for Logging level: {type(level)}. Message:({msg})")
 
 
-def log_set_level(level: (str | int) = "DEBUG") -> None:
+def log_set_level(level: str | int = "DEBUG") -> None:
     """Set the level of the Logger.
 
     Args:
