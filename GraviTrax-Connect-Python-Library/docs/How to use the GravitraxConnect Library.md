@@ -2,7 +2,7 @@
 
 This Library uses the `asyncio` framework to allow the asynchronous execution of functions. 
 Because most methods of the `gravitrax_bridge.Bridge` class are [asyncio coroutines](https://docs.python.org/3/library/asyncio-task.html#coroutines) they need to be started inside an asynchronous function itself.
-This is achieved by putting the keyword `async` in font of the main function and running it with `asyncio.run()` afterwards. 
+This is achieved by putting the keyword `async` in front of the main function and running it with `asyncio.run()` afterwards. 
 
 ```python
 import asyncio
@@ -88,7 +88,7 @@ Although optional, it's still recommended to use it as it future proofs your pro
 
 The [connect()](#connect) method is used to find a Bridge and connect to it. The default behavior is to look for a Bluetooth device with
 the name "GravitraxConnect"(can be found in the gravitrax_constants file). When multiple bridges are available, 
-the connection will be established with the first one found. It's is possible to change
+the connection will be established with the first one found. It's possible to change
 the name by adjusting the `name_or_addr` argument. This doesn't really make sense as of now because every Bridge uses the name
 "GravitraxConnect". 
 
@@ -185,7 +185,7 @@ The Library implements multiple ways to send data to the bridge. [send_signal()]
 | resend_gap    | How long the added delay(in seconds) after every transmission(including resends) is                                              | 0                                                   |
 | uuid          | The uuid of the Bridge to send the Signals. Should not be changed unless future updates to the Bridge change the uuid for writes | Default value specified in gravitrax_constants file |
 | header        | The header of the send signal. Should not be changed unless there are changes to the communications protocol in the future       | Default value specified in gravitrax_constants file |
-| stone         | Specifies the Stonetype of the send signal.                                                                                      | Defaults to the value of the Bridge Stone(5)        |
+| stone         | Specifies the Stonetype of the send signal.                                                                                      | Defaults to the value of the Bridge Stone(6)        |
 | random_id     | Boolean specifying if the the message_id value should be chosen randomly or incremented with each signal                         | False                                               |
 | error_event   | A asyncio.Event that is set when a error happens during the send operation                                                       | None                                                |
 
@@ -193,8 +193,8 @@ The method [send_signal()](#send_signal) is used to send a Signal that is unders
 The argument `error_event` can be used to specify a `asyncio.Event` that is set when an error happens during the send process. An example how this can be used can be found in the [send_periodic()](#send_periodic) Method. 
 
 ```python
-    if await b.send_signal(gv.STATUS_ALL, gv.COLOR_RED, stone=gv.STONE_REMOTE):
-        print("Send red Signal")
+    await b.send_signal(gv.STATUS_ALL, gv.COLOR_RED, stone=gv.STONE_BRIDGE)
+    print("Sent red signal")
 ```
 
 ## send_periodic()
@@ -207,14 +207,14 @@ The argument `error_event` can be used to specify a `asyncio.Event` that is set 
 | gap             | The time in seconds between every transmission                                      | 0                                            |
 | resends         | How often a Signal is transmitted                                                   | 12                                           |
 | resend_gap      | How long the added delay(in seconds) after every transmission(including resends) is | 0                                            |
-| stone           | Specifies the Stonetype of the send signal.                                         | Defaults to the value of the Bridge Stone(5) |
+| stone           | Specifies the Stonetype of the send signal.                                         | Defaults to the value of the Bridge Stone(6) |
 | stop_on_failure | Specifies if the function should stop if a send fails                               | True                                         |
 
 Sends multiple Signals with a fixed time in between.  
 
 ```python
-    await b.send_periodic(gv.STATUS_ALL, gv.COLOR_RED, count=20, gap=2, stone=gv.STONE_REMOTE):
-    print("Sending 20 red Signals")
+    await b.send_periodic(gv.STATUS_ALL, gv.COLOR_RED, count=20, gap=2, stone=gv.STONE_BRIDGE)
+    print("Sending 20 red signals")
 ```
 
 ## send_bytes()
@@ -227,13 +227,13 @@ Sends multiple Signals with a fixed time in between.
 | uuid        | The uuid of the Bridge to send the Signals. Should not be changed unless future updates to the Bridge change the uuid for writes | Default value specified in gravitrax_constants file |
 | error_event | A asyncio.Event that is set when a error happens during the send operation                                                       | None                                                |
 
-The [send_bytes()]() method can be used to send arbitrary data to the bridge. Doing this usually doesn't make sense because the Bridge only reacts to specific Signals. 
+The [send_bytes()](#send_bytes) method can be used to send arbitrary data to the bridge. Doing this usually doesn't make sense because the Bridge only reacts to specific Signals. 
 In order to send a correct Signal [send_signal()](#send_signal) is used.  The argument `error_event` can be used to specify a `asyncio.Event` which is set when an error occurs. 
 This is used by [send_periodic()](#send_periodic) to stop if an error happens.
 
 ```python
-    if await b.send_bytes(bytes([1,2,3])):
-        print("Send 1,2,3")
+    await b.send_bytes(bytes([1, 2, 3]))
+    print("Sent bytes 1,2,3")
 ```
 
 # Bridge Mode
@@ -243,14 +243,14 @@ By using [start_bridge_mode()](#start_bridge_mode) a signal is sent that puts al
 Send a signal that puts all receiving Stones into Bridge Mode, where all signals not from a Bridge are ignored.
 
 ```python
-    if await b.start_bridge_mode():
-        print("Change to Bridge mode Requested")
+    await b.start_bridge_mode()
+    print("Bridge mode change requested")
 ```
 ## stop_bridge_mode()
 Send a signal that puts all receiving stones into the normal operation Mode.
 ```python
-    if await b.stop_bridge_mode():
-        print("Change to Normal mode Requested")
+    await b.stop_bridge_mode()
+    print("Normal mode change requested")
 ```
 
 # Notifications
