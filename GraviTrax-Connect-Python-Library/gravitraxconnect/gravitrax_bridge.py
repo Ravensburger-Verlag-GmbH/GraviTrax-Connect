@@ -59,17 +59,23 @@ from bleak.backends.characteristic import BleakGATTCharacteristic
 from gravitraxconnect import gravitrax_constants
 
 
+_STREAM_HANDLER_NAME = f"{__name__}_stream_handler"
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-stream_handler = logging.StreamHandler()
-stream_handler.name = f"{__name__}_stream_handler"
-stream_handler.setFormatter(
-    logging.Formatter(
-        "%(asctime)s.%(msecs)03d - %(levelname)s: %(message)s", "%H:%M:%S"
+if not any(
+    getattr(handler, "name", None) == _STREAM_HANDLER_NAME
+    for handler in logger.handlers
+):
+    stream_handler = logging.StreamHandler()
+    stream_handler.name = _STREAM_HANDLER_NAME
+    stream_handler.setFormatter(
+        logging.Formatter(
+            "%(asctime)s.%(msecs)03d - %(levelname)s: %(message)s", "%H:%M:%S"
+        )
     )
-)
-stream_handler.setLevel(logging.INFO)
-logger.addHandler(stream_handler)
+    stream_handler.setLevel(logging.INFO)
+    logger.addHandler(stream_handler)
 logger.disabled = True
 
 
@@ -155,7 +161,7 @@ class Bridge:
                 f"Failed to connect to {device.address} after {timeout} seconds",
                 level="WARNING",
             )
-            return
+            return False
         except (BleakDeviceNotFoundError, asyncio.CancelledError):
             return False
 
@@ -334,7 +340,7 @@ class Bridge:
         """
         if not isinstance(uuid, str):
             raise TypeError(
-                "Disabling Notifications failed: The uuid {uuid} is not a string"
+                f"Enabling Notifications failed: The uuid {uuid} is not a string"
             )
         if not callable(callback):
             raise TypeError("callback is not callable")
@@ -375,7 +381,7 @@ class Bridge:
         """
         if not isinstance(uuid, str):
             raise TypeError(
-                "Disabling Notifications failed: The uuid {uuid} is not a string"
+                f"Disabling Notifications failed: The uuid {uuid} is not a string"
             )
 
         try:
@@ -463,6 +469,7 @@ class Bridge:
                         "Incoming Notification was discarded because the Checksum was incorrect",
                         level="DEBUG",
                     )
+                    continue
 
                 try:
                     await self.noti_callback(
@@ -578,13 +585,12 @@ class Bridge:
             random_id is set to false
         """
         reserved = random.randrange(0, 255)
-        await self.__send_lock.acquire()
-        if random_id:
-            message_id = random.randrange(0, 255)
-        else:
-            message_id = self.__next_send_id
-        self.__next_send_id = (self.__next_send_id + 1) % 256
-        self.__send_lock.release()
+        async with self.__send_lock:
+            if random_id:
+                message_id = random.randrange(0, 255)
+            else:
+                message_id = self.__next_send_id
+            self.__next_send_id = (self.__next_send_id + 1) % 256
         checksum = (header + stone + status + reserved + message_id) % 256
         await self.send_bytes(
             bytes(
@@ -823,7 +829,7 @@ async def scan_bridges(
     timeout: float = 10.0,
     do_print: bool = False,
     stop_on_hit: bool = False,
-) -> None:
+) -> list[str]:
     """Scan for Bluetooth LE Devices.
     The MAC addresses(as String) of all found Bridges are returned
     after the timeout is reached. When do_print is enabled found
@@ -853,6 +859,7 @@ async def scan_bridges(
         ) from exc
 
     address_list = []
+    stop_event = asyncio.Event()
     log_prev_state = logger.disabled
     logger.disabled = not do_print
 
@@ -863,13 +870,21 @@ async def scan_bridges(
                 log_print(advertisement_data.local_name, ":", device.address)
 
             if stop_on_hit:
-                return address_list
+                stop_event.set()
 
     scanner = BleakScanner(discover_callback, "")
     await scanner.start()
-    await asyncio.sleep(int(timeout))
-    await scanner.stop()
-    logger.disabled = log_prev_state
+    try:
+        if stop_on_hit:
+            try:
+                await asyncio.wait_for(stop_event.wait(), timeout=timeout)
+            except TimeoutError:
+                pass
+        else:
+            await asyncio.sleep(timeout)
+    finally:
+        await scanner.stop()
+        logger.disabled = log_prev_state
     return address_list
 
 
