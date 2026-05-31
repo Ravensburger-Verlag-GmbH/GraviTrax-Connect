@@ -1,6 +1,6 @@
 [project]
 name = "gravitraxconnect"
-version = "0.3.4"
+version = "0.3.5"
 keywords = ["gravitrax", "Ravensburger", "marble tracks", "kugelbahn", "STEM"]
 description = "Library to communicate with a Gravitrax Connect BLE-Bridge"
 authors = [{name="placeholder", email="placeholder@ravensburger.de"}]
@@ -29,7 +29,6 @@ classifiers = [
 
 dependencies = [
     "bleak>=0.19.1",
-    "asyncio>=3.4.3",
 ]    
 
 
