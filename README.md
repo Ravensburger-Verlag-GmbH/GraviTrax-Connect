@@ -35,7 +35,7 @@ A more detailed overview of the features this library supports can be found in [
 # Manual installation 
 ## Installing Python
 
-Please use Python version 3.1 or newer. Otherwis,e not all functions will work properly. There are several ways to install it:
+Please use Python version 3.10 or newer. Otherwise, not all functions will work properly. There are several ways to install it:
 
 ### Using python.org
 You can find the latest version at https://www.python.org/downloads/. During installation, check the “Add Python to Path” box.
@@ -44,7 +44,7 @@ You can find the latest version at https://www.python.org/downloads/. During ins
 
 Alternatively, you can install it using the Microsoft Store. [Here is the latest version](https://www.microsoft.com/store/productId/9NRWMJP3717K). 
 
-Check if the installation was successful by using the command line center with the following commands:
+Check if the installation was successful by using a terminal with the following commands:
 
 ```shell
 python -V 
@@ -94,7 +94,7 @@ pip install bleak
 The library folder contains a folder "examples". Here you can find scripts showing basic functions.
 
 More complex applications can be found in the folder "Applications".
-To use the example applications, you will need to install some more libraries. Therefore, navigate with the command line center to corresponding directory and use the following command:
+To use the example applications, you will need to install some more libraries. Therefore, navigate to the corresponding directory in a terminal and use the following command:
 ```shell
 pip install -r .\requirements.txt
 ``` 
@@ -102,6 +102,17 @@ pip install -r .\requirements.txt
 - Gravitrax_GUI: GUI to send and receive signals
 - Gravitrax_gpio: a script implementing the GPIO-Pins from a Raspberry Pi
 - Timer: a script measuring the time between start and finish of a marble
+
+## Running tests
+
+The library includes hardware-independent unit tests in `GraviTrax-Connect-Python-Library/tests/unit_tests.py`.
+
+```shell
+cd GraviTrax-Connect-Python-Library
+python -m unittest tests.unit_tests
+```
+
+The `function_tests.py` script contains integration-style checks that require an actual GraviTrax Connect bridge.
 
 # Dependencies
 
